@@ -1,9 +1,7 @@
 import fs from "fs/promises";
-import path from "path";
 import { confirm, input } from "@inquirer/prompts";
 import { Command } from "commander";
-import { createStyleContext } from "@/utils/create-style-context";
-import { resolveAliasPath } from "@/utils/resolve-alias-path";
+import { cssVars } from "@/utils/css";
 import { STRUCTURE } from "@/utils/structure";
 
 const DEFAULT_UI_ALIAS = "@/components/ui";
@@ -39,6 +37,19 @@ export const init = new Command()
       // nore-ui.json does not exist, continue
     }
 
+    // CSS file path
+    const cssPath = await input({
+      message: "Your css file path (relative to project root):",
+      default: "src/styles.css",
+    });
+
+    try {
+      await fs.access(cssPath);
+    } catch (error) {
+      console.error(`Error: "${cssPath}" does not exist.`);
+      process.exit(1);
+    }
+
     const aliases = {
       ui: await input({
         message: "Configure the import alias for ui components:",
@@ -56,6 +67,7 @@ export const init = new Command()
 
     const config = {
       aliases,
+      css: cssPath,
     };
 
     await fs.writeFile("nore-ui.json", JSON.stringify(config, null, 2));
@@ -95,16 +107,19 @@ export const init = new Command()
       console.log("⚠ tsconfig.json not found or couldn't be updated");
     }
 
+    // Write CSS file
+    let cssContentToAppend = cssVars;
+    const existingCss = await fs.readFile(cssPath, "utf-8");
+    if (!existingCss.endsWith("\n")) {
+      cssContentToAppend = "\n" + cssVars;
+    }
+    await fs.appendFile(cssPath, cssContentToAppend, "utf-8");
+
     // Add template folder and files
     Object.entries(STRUCTURE).forEach(async ([path, content]) => {
       await fs.mkdir(path.split("/").slice(0, -1).join("/"), { recursive: true });
       await fs.writeFile(path, content);
     });
-
-    // Add create-style-context.tsx to lib defined by config
-    const libPath = await resolveAliasPath(aliases.lib);
-    await fs.mkdir(libPath, { recursive: true });
-    await fs.writeFile(path.join(libPath, "create-style-context.tsx"), createStyleContext);
 
     console.log("Project initialized. You can now add components.");
   });
