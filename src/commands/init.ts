@@ -50,6 +50,12 @@ export const init = new Command()
       process.exit(1);
     }
 
+    // React Server Component
+    const isRSC = await confirm({
+      message: "Are you using React Server Components in your project?",
+      default: false,
+    });
+
     const aliases = {
       ui: await input({
         message: "Configure the import alias for ui components:",
@@ -68,6 +74,7 @@ export const init = new Command()
     const config = {
       aliases,
       css: cssPath,
+      rsc: isRSC,
     };
 
     await fs.writeFile("nore-ui.json", JSON.stringify(config, null, 2));
@@ -78,33 +85,6 @@ export const init = new Command()
     } catch (error) {
       console.log("⚠ panda.config.ts couldn't be updated");
       console.error(error);
-    }
-
-    // Modify tsconfig.json if it exists
-    try {
-      const tsconfigPath = "tsconfig.json";
-      await fs.access(tsconfigPath);
-
-      const tsconfigContent = await fs.readFile(tsconfigPath, "utf-8");
-      const tsconfig = JSON.parse(tsconfigContent);
-
-      // Add styled-system to include array
-      if (!tsconfig.include) {
-        tsconfig.include = [];
-      }
-      if (!tsconfig.include.includes("styled-system")) {
-        tsconfig.include.push("styled-system");
-      }
-
-      // Add baseUrl to compilerOptions
-      if (!tsconfig.compilerOptions) {
-        tsconfig.compilerOptions = {};
-      }
-      tsconfig.compilerOptions.baseUrl = ".";
-
-      await fs.writeFile(tsconfigPath, JSON.stringify(tsconfig, null, 2));
-    } catch (error) {
-      console.log("⚠ tsconfig.json not found or couldn't be updated");
     }
 
     // Write CSS file

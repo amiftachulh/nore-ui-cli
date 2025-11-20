@@ -6,6 +6,8 @@ export const configSchema = z.object({
     lib: z.string(),
     hooks: z.string(),
   }),
+  css: z.string(),
+  rsc: z.boolean().optional(),
 });
 
 export type Config = z.infer<typeof configSchema>;

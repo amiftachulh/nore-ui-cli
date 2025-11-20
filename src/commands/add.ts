@@ -6,7 +6,7 @@ import { confirm } from "@inquirer/prompts";
 import { Command } from "commander";
 import z from "zod";
 import { spinner } from "@/lib/spinner";
-import { registryItemSchema, type RegistryItemFile } from "@/schemas";
+import { registryItemSchema, type Config, type RegistryItemFile } from "@/schemas";
 import { kebabToCamel } from "@/utils/case-converter";
 import { getConfig } from "@/utils/config";
 import { getPackageInstaller } from "@/utils/get-package-manager";
@@ -241,15 +241,21 @@ async function installDependencies(deps: string[], devDeps: string[]) {
   }
 }
 
-function transformImports(content: string, aliasConfig: AliasConfig): string {
-  return content.replace(
+function transformImports(content: string, cfg: Config): string {
+  let result = content.replace(
     /from\s+["'](@\/registry\/default\/(ui|lib|hooks)\/[^"']+)["']/g,
     (_, full, group) => {
       const rest = full.replace(`@/registry/default/${group}/`, "");
-      const alias = aliasConfig.aliases[group];
+      const alias = cfg.aliases[group as keyof typeof cfg.aliases];
       return `from "${alias}/${rest}"`;
     }
   );
+
+  if (!cfg.rsc) {
+    result = result.replace('"use client";\n\n', "");
+  }
+
+  return result;
 }
 
 async function updateRecipeIndex(baseDir: string, registryType: string) {

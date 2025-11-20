@@ -1,6 +1,6 @@
 {
   "name": "nore-ui-cli",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "type": "module",
   "description": "CLI for Nore UI",
   "scripts": {
@@ -29,6 +29,7 @@
     "@antfu/ni": "^25.0.0",
     "@inquirer/prompts": "^7.8.0",
     "commander": "^14.0.0",
+    "fast-glob": "^3.3.3",
     "ora": "^8.2.0",
     "zod": "^4.1.5"
   },
