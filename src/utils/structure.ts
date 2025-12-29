@@ -249,10 +249,6 @@ export const semanticTokens = defineSemanticTokens({
       fg: { value: "var(--muted-fg)" },
     },
     danger: { value: "var(--danger)" },
-    surface: {
-      DEFAULT: { value: "var(--surface)" },
-      fg: { value: "var(--surface-fg)" },
-    },
     card: {
       DEFAULT: { value: "var(--card)" },
       fg: { value: "var(--card-fg)" },

@@ -1,6 +1,6 @@
 {
   "name": "nore-ui-cli",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "type": "module",
   "description": "CLI for Nore UI",
   "scripts": {

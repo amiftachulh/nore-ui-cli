@@ -10,8 +10,6 @@ export const cssVars = `:root {
   --muted: #f5f5f5;
   --muted-fg: #737373;
   --danger: #e7000b;
-  --surface: #f8f8f8;
-  --surface-fg: var(--fg);
   --card: #ffffff;
   --card-fg: #0a0a0a;
   --popover: #ffffff;
@@ -46,8 +44,6 @@ export const cssVars = `:root {
   --muted: #262626;
   --muted-fg: #a1a1a1;
   --danger: #ff6467;
-  --surface: #161616;
-  --surface-fg: #a1a1a1;
   --card: #171717;
   --card-fg: #fafafa;
   --popover: #171717;

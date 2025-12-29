@@ -107,6 +107,7 @@ export const add = new Command()
   });
 
 const REGISTRY_URL = process.env.NORE_UI_REGISTRY || "https://template-fe.nore.web.id";
+
 async function fetchRegistryItem(name: string) {
   const res = await fetch(`${REGISTRY_URL}/r/${name}.json`);
   if (!res.ok) {
